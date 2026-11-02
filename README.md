@@ -16,8 +16,15 @@ box, over logs at rest.
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](#license)
 ![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)
 
-> **Status: early / pre-1.0 (`0.2.1`).** The six detectors work and are covered by tests,
+> **Upstream base: early / pre-1.0 (`0.2.1`).** The six detectors work and are covered by tests,
 > but things may well change before 1.0. Feedback is welcome.
+
+**Local fork extension:** `sigwood repos SNAPSHOT.ndjson` is an experimental,
+read-only repository-attention digest: captured PR conflicts, check results for
+the exact captured head, drafts, and missing evidence. It is not a security
+detector or an automatic repository manager. See the
+[snapshot format, synthetic demo, and separate opt-in collector](docs/REPOSITORY_ATTENTION.md).
+This extension is local to this fork, not an upstream feature or a published release.
 
 <p align="center">
   <b><a href="#quick-start">Install</a></b> ·

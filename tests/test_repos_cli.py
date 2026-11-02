@@ -150,13 +150,14 @@ def test_repos_parser_error_has_no_partial_output(tmp_path, fake_core, no_other_
 def test_repos_bounds_reads_before_parser(tmp_path, fake_core, no_other_paths):
     snapshot = tmp_path / "snapshot"
     snapshot.write_text("x" * ((1 << 20) * 3), encoding="utf-8")
+    received = []
     def reject(lines):
-        line = next(iter(lines))
-        assert len(line) == (1 << 20) + 1
-        raise ValueError("line 1: line exceeds limit")
+        received.extend(lines)
+        pytest.fail("oversized lines must fail before the parser receives them")
     fake_core[0].parse_snapshot = reject
-    with pytest.raises(ValueError, match="line exceeds limit"):
+    with pytest.raises(ValueError, match="1 MiB"):
         cli._main(["repos", str(snapshot)])
+    assert received == []
 
 
 

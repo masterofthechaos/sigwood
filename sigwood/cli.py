@@ -1681,6 +1681,8 @@ def _run_repos(args: list[str]) -> int:
             def read_lines():
                 raw_lines = iter(lambda: stream.readline((1 << 20) + 1), b"")
                 for number, raw in enumerate(raw_lines, 1):
+                    if len(raw) > (1 << 20):
+                        raise ValueError(f"line {number}: input line exceeds 1 MiB limit")
                     try:
                         yield raw.decode("utf-8")
                     except UnicodeError:
