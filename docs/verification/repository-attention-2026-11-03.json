@@ -1,0 +1,51 @@
+{
+  "recorded_date": "2026-11-03",
+  "package": "sigwood",
+  "version": "0.2.1+repos.1",
+  "repository": "https://github.com/masterofthechaos/sigwood",
+  "pull_request": "https://github.com/masterofthechaos/sigwood/pull/1",
+  "merged_at_utc": "2026-11-03T20:50:42Z",
+  "merge_commit": "f447470b1bebebb9b8c433700c21807e5084384f",
+  "accepted_feature_head": "8fbdbe6eeabf2e025d44b67939ddf64d180738e6",
+  "identical_tree": "bd5a688eee261f96b3781af5289dd37769a4d990",
+  "verification_scope": "Local Linux/Python 3.12 tests and isolated package installation; no inference about other execution paths.",
+  "full_suite": {
+    "source": "clean tracked export of accepted_feature_head",
+    "command": "python -m pytest -ra",
+    "passed": 2617,
+    "skipped": 11,
+    "seconds": 52.71,
+    "log_sha256": "1deb720e10b4924862eebec9f22d873e45984c227803d8b2d0e8c8d332e0e2d8",
+    "merge_commit_suite_rerun": false
+  },
+  "post_merge_install": {
+    "source": "git+https://github.com/masterofthechaos/sigwood.git@main",
+    "resolved_commit": "f447470b1bebebb9b8c433700c21807e5084384f",
+    "pip_options": [
+      "--no-deps",
+      "--force-reinstall"
+    ],
+    "environment": "disposable isolated venv with dependencies already installed; execution outside source checkout",
+    "installed_version": "0.2.1+repos.1",
+    "vcs_metadata_verified": true,
+    "demo_output": "byte-identical to tests/fixtures/repository-attention-report.json",
+    "demo_sha256": "8521434181b286be94ad3d4b9ce3876e66d8c409ba82c1c0af779cedb592faa9",
+    "install_log_sha256": "a4ff4b8aadc3cbee8b58eba4ae5121ca3fef73478c89f0b555c7d05637551d9a"
+  },
+  "distributed_artifacts": {
+    "sigwood-0.2.1+repos.1-py3-none-any.whl": "50391cf79dfc6e6c2c5989fa6e680d608688d3e7e64be2fadeb4634e5e86802a",
+    "sigwood-source.tar.gz": "fce51c36d256b963cd804aab10530675bd2208382740a9ffcf40cc915c1924c7",
+    "sigwood-0.2.1+repos.1-bundle.zip": "a81858eaf56c04b713a1ce1b09ba24ac7d4f2741c1161c318901f346dcaeacf7"
+  },
+  "artifact_note": "Artifacts were created from accepted_feature_head before merge; the merge has the identical tree. Their original manifest remains a historical receipt.",
+  "privacy": "No captured real snapshots, credentials, or private inputs are included in this record.",
+  "documentation_reconciliation": {
+    "source": "local documentation working tree based on merge_commit; runtime unchanged",
+    "publication": "local commit only",
+    "command": "python -m pytest -ra",
+    "passed": 2617,
+    "skipped": 11,
+    "seconds": 62.24,
+    "log_sha256": "d409bcf289329754af140933dfc7483855bc4bcc96668d24872049d09bc1c89c"
+  }
+}

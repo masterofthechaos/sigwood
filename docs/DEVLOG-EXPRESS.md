@@ -10,8 +10,13 @@ Terse current-state scan. Points back to `docs/DEVLOG.md` for detail. Keep foote
   2,617 tests / 11 baseline-equivalent skips. Four deliberate regressions were caught.
   A clean installed wheel outside the checkout matched synthetic golden output and
   analyzed a current public PR snapshot normalized from live connector GET responses.
-- **Limits:** no hosted CI runs/checks were present on the verified feature head; no hosted
-  CI success, authenticated gh transport run, or other-platform test is claimed.
+- **Merged:** [PR #1](https://github.com/masterofthechaos/sigwood/pull/1) landed on fork main
+  at 2026-11-03 20:50:42 UTC as `f447470b1bebebb9b8c433700c21807e5084384f`. Its tree
+  exactly matches the accepted package source. Post-merge public-main installation into
+  an isolated venv resolved that commit and reproduced version and demo golden output.
+- **Receipt:** `docs/verification/repository-attention-2026-11-03.json` records source,
+  package hashes and local verification. Scope is Linux/Python 3.12 acceptance only;
+  this receipt does not establish hosted CI or authenticated gh transport success.
 - **Distribution:** fork-local installable wheel plus full Git source archive; no upstream,
   PyPI, or tagged GitHub release. PR #1 records publication status. Use the separate-venv
   instructions in `docs/REPOSITORY_ATTENTION.md`; checkout-only collector/demo/tests are

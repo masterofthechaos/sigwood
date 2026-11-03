@@ -6,6 +6,37 @@ local checkout — not a replacement for upstream's own history (see `git log`, 
 
 ---
 
+## 2026-11-03 — Merged main and post-merge installation receipt
+- **By:** Polo, reconciling the final publication and installation evidence after Micah's
+  specific approval to merge PR #1. This entry supplements, rather than rewrites, the
+  earlier acceptance history.
+- **Merged:** [PR #1](https://github.com/masterofthechaos/sigwood/pull/1) at
+  **2026-11-03 20:50:42 UTC**. Fork main is
+  `f447470b1bebebb9b8c433700c21807e5084384f`, with accepted feature head
+  `8fbdbe6eeabf2e025d44b67939ddf64d180738e6` as its second parent. The merge tree
+  `bd5a688eee261f96b3781af5289dd37769a4d990` exactly matches the tested and packaged
+  source. No code changed during merge.
+- **Post-merge acceptance:** installed `git+https://github.com/masterofthechaos/sigwood.git@main`
+  with `pip install --no-deps --force-reinstall` into the already provisioned, disposable
+  acceptance venv, outside the checkout. Pip resolved main to the exact merge commit;
+  installed VCS metadata confirmed it. `sigwood --version` returned `0.2.1+repos.1`, and
+  the installed command's synthetic demo JSON byte-matched the repository golden fixture.
+  This is a local install smoke, not a fresh dependency-resolution or platform-matrix run.
+- **Prior acceptance retained:** final feature-head tracked export passed **2,617 tests /
+  11 baseline-equivalent skips**. Source/tree identity carries that tested content through
+  the merge; the full suite was not separately rerun for the merge commit at that time.
+- **Durable receipt:** `docs/verification/repository-attention-2026-11-03.json` records exact
+  source and artifact hashes, local test acceptance, and post-merge smoke evidence. The
+  original bundle manifest truthfully describes its earlier creation time, before merge.
+- **Reconciliation validation:** the local documentation working tree based on the merge
+  commit passed `python -m pytest -ra`: **2,617 passed / 11 existing skips** (62.24s).
+  This later documentation check is separate from the historical post-merge install receipt.
+- **No version bump:** documentation and verification records only; capability remains
+  `0.2.1+repos.1`. Generated `docs/STATE.md`, runtime code, package assets and paused AdGuard
+  work are untouched. This reconciliation is prepared as a local commit only, not published.
+
+---
+
 ## 2026-11-03 — Fork distribution acceptance and installation guidance
 - **By:** Polo, under Micah's instruction to ship improvements; fork only, with reversible
   source publication and a directly usable local package. Upstream provenance and license stay intact.
