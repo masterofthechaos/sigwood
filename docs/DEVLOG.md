@@ -6,6 +6,36 @@ local checkout — not a replacement for upstream's own history (see `git log`, 
 
 ---
 
+## 2026-11-03 — Fork distribution acceptance and installation guidance
+- **By:** Polo, under Micah's instruction to ship improvements; fork only, with reversible
+  source publication and a directly usable local package. Upstream provenance and license stay intact.
+- **Accepted source:** PR #1 head `15d02401fd3d301e8284755bb89f47183807540e`, tree
+  `095751fb1abe1643a7e8d0da92842cddc10b4853`, based on fork main
+  `cd21b865a3f2eb225e22e23428cff74df9dc2310`. Remote owner, PR head, existing work,
+  branch policies, reviews and check evidence were re-read before preparing publication.
+- **Fresh acceptance:** Linux/Python 3.12 full suite **2,617 passed / 11 baseline-equivalent
+  skips**, repeated from a clean tracked export. Fault-injection checks individually disabled
+  exact-head matching, promoted empty checks, promoted incomplete coverage, and changed collector
+  transport to POST; the relevant existing regression test caught every injected fault.
+- **Package:** clean tracked export built wheel and sdist; `twine check` passed. Wheel package
+  files matched reviewed source, upstream license/data resources were present, and installation
+  in a fresh isolated venv outside the checkout reproduced demo golden JSON and the fork version.
+  Distribution includes the complete Git source archive because the optional collector/demo/tests
+  are not part of the wheel or Python sdist. A separate venv preserves existing installations.
+- **Live evidence:** current public PR metadata, check runs and statuses were retrieved through
+  connected GitHub GET endpoints and normalized by the collector with injected responses. The
+  installed analyzer matched the exact head and correctly reported empty check evidence as unknown.
+  This does not validate authenticated gh subprocess transport. No real snapshots enter artifacts.
+- **Review and limits:** independent static review found no release blocker. Hosted checks/runs
+  were absent on the accepted feature head; no hosted CI success, upstream release, PyPI upload,
+  GitHub release/tag, automated service, recurring collection or platform matrix pass is claimed.
+  The upstream release runbook is not represented as completed. PR #1 and the delivered bundle's
+  verification manifest are the source-publication and package receipts respectively.
+- **No version bump:** this acceptance commit changes installation and verification documentation
+  only; the already-versioned capability remains `0.2.1+repos.1`. Paused AdGuard work stays excluded.
+
+---
+
 ## 2026-11-02 — Local repository-attention digest implemented and verified
 - **By:** Polo, at Micah's direction to make Sigwood useful for managing his other repositories.
 - **Scope:** experimental, fork-local `sigwood repos PATH --format=text|json`; a factual offline

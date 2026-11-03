@@ -24,7 +24,9 @@ read-only repository-attention digest: captured PR conflicts, check results for
 the exact captured head, drafts, and missing evidence. It is not a security
 detector or an automatic repository manager. See the
 [snapshot format, synthetic demo, and separate opt-in collector](docs/REPOSITORY_ATTENTION.md).
-This extension is local to this fork, not an upstream feature or a published release.
+This extension is available only from this fork as `0.2.1+repos.1`, not from the
+upstream PyPI package. Use the [fork installation instructions](docs/REPOSITORY_ATTENTION.md#install-the-fork-distribution)
+for the wheel and complete source bundle. It is not an upstream release.
 
 <p align="center">
   <b><a href="#quick-start">Install</a></b> ·

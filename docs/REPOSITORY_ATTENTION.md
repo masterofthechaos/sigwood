@@ -7,17 +7,45 @@ This is a small local-use addition to David Augros's Sigwood, not a change in
 upstream stewardship or a replacement for GitHub. Network threat detectors and
 graphs are unchanged; repository snapshots are not fabricated network flows.
 
-## Try it without credentials or a network
+## Install the fork distribution
 
-Install this checkout, not the upstream PyPI release:
+Version `0.2.1+repos.1` is a fork-local build, not an upstream or PyPI release.
+The fork distribution pairs an installable wheel with a complete Git source
+archive. The wheel installs `sigwood repos`; the source archive supplies the
+optional collector, synthetic demo, tests, and documentation. A Python source
+package (sdist) alone does not include those checkout-only files.
+
+After extracting the distribution ZIP, install into a **new, separate** virtual
+environment so an existing upstream installation is preserved. Python 3.11+
+is declared by the project; this fork build was verified on Linux/Python 3.12.
+Dependency installation can use the network; analyzing a snapshot does not.
 
 ```bash
+python3 -m venv .venv-sigwood-repos
+. .venv-sigwood-repos/bin/activate
+python -m pip install ./sigwood-0.2.1+repos.1-py3-none-any.whl
+tar -xzf sigwood-source.tar.gz
+sigwood --version
+sigwood repos sigwood-source/demo/repository-attention.ndjson
+sigwood repos sigwood-source/demo/repository-attention.ndjson --format=json
+```
+
+The optional collector is then `sigwood-source/tools/repository_snapshot.py`.
+The wheel does not install or run it automatically. Check the bundle's
+`SHA256SUMS` and `VERIFICATION.json` for the source commit and artifact receipt.
+For code review or development, use the fork checkout instead:
+
+```bash
+git clone https://github.com/masterofthechaos/sigwood.git
+cd sigwood
 python3 -m venv .venv
 . .venv/bin/activate
 python -m pip install -e '.[dev]'
 sigwood repos demo/repository-attention.ndjson
 sigwood repos demo/repository-attention.ndjson --format=json
 ```
+
+## Try it without credentials or a network
 
 The demo is entirely synthetic. The analyzer reads exactly one regular UTF-8
 file and writes only stdout. There is no directory discovery, config loading,
@@ -35,6 +63,9 @@ clones repositories, sources their scripts/configuration, reads token files,
 changes issues/PRs, starts CI, merges, pushes, or deploys. Agent-Campus or another
 trusted collection process can instead emit the same format; no integration
 with Agent-Campus has been installed or claimed.
+
+Run the example below from the fork checkout. If using the distribution bundle,
+first run `cd sigwood-source` from the extracted bundle directory.
 
 ```bash
 # Choose a private location OUTSIDE any source repository.
