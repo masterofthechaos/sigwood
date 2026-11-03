@@ -1,0 +1,46 @@
+Repository attention snapshot
+Observed at: 2026-01-01T00:00:00Z
+Listed repositories: 2 | Known pull requests: 3
+Observed check states: failure_observed: 1 | pending_observed: 0 | unknown: 1 | success_observed: 1
+Conflicts observed: 1 | Drafts: 1 | Draft state unknown: 0
+Repository pull-request coverage:
+  example/service: unavailable
+  example/widget: complete
+
+example/widget #1
+  Head: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  PR: https://github.com/example/widget/pull/1
+  Commit: https://github.com/example/widget/commit/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  Draft: false | Mergeability: conflict
+  Checks: failure_observed
+  Check evidence head: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  Reasons: current_head_failure_observed, merge_conflict_observed
+  check_runs coverage: complete
+    tests: completed / failure
+  statuses coverage: complete
+
+example/widget #2
+  Head: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+  PR: https://github.com/example/widget/pull/2
+  Commit: https://github.com/example/widget/commit/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+  Draft: true | Mergeability: unknown
+  Checks: unknown
+  Check evidence head: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+  Reasons: stale_check_head, mergeability_unknown, draft
+  check_runs coverage: complete
+    tests: completed / success
+  statuses coverage: complete
+
+example/widget #3
+  Head: cccccccccccccccccccccccccccccccccccccccc
+  PR: https://github.com/example/widget/pull/3
+  Commit: https://github.com/example/widget/commit/cccccccccccccccccccccccccccccccccccccccc
+  Draft: false | Mergeability: no_conflict_observed
+  Checks: success_observed
+  Check evidence head: cccccccccccccccccccccccccccccccccccccccc
+  Reasons: current_head_all_observed_checks_successful
+  check_runs coverage: complete
+    tests: completed / success
+  statuses coverage: complete
+
+Snapshot only; collection is not atomic and captured heads may have advanced. Supplied snapshots are unverified assertions; derived links do not prove repository or pull request existence. Required-check policy, reviews, owner holds and merge readiness not assessed.

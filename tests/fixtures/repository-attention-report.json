@@ -1,0 +1,124 @@
+{
+  "limitations": "Snapshot only; collection is not atomic and captured heads may have advanced. Supplied snapshots are unverified assertions; derived links do not prove repository or pull request existence. Required-check policy, reviews, owner holds and merge readiness not assessed.",
+  "observed_at": "2026-01-01T00:00:00Z",
+  "pull_requests": [
+    {
+      "checks": {
+        "check_runs": {
+          "coverage": "complete",
+          "items": [
+            {
+              "conclusion": "failure",
+              "name": "tests",
+              "status": "completed"
+            }
+          ]
+        },
+        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "statuses": {
+          "coverage": "complete",
+          "items": []
+        }
+      },
+      "checks_state": "failure_observed",
+      "commit_url": "https://github.com/example/widget/commit/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "draft": false,
+      "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "mergeability": "conflict",
+      "number": 1,
+      "reasons": [
+        "current_head_failure_observed",
+        "merge_conflict_observed"
+      ],
+      "repository": "example/widget",
+      "url": "https://github.com/example/widget/pull/1"
+    },
+    {
+      "checks": {
+        "check_runs": {
+          "coverage": "complete",
+          "items": [
+            {
+              "conclusion": "success",
+              "name": "tests",
+              "status": "completed"
+            }
+          ]
+        },
+        "head_sha": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "statuses": {
+          "coverage": "complete",
+          "items": []
+        }
+      },
+      "checks_state": "unknown",
+      "commit_url": "https://github.com/example/widget/commit/bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "draft": true,
+      "head_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "mergeability": "unknown",
+      "number": 2,
+      "reasons": [
+        "stale_check_head",
+        "mergeability_unknown",
+        "draft"
+      ],
+      "repository": "example/widget",
+      "url": "https://github.com/example/widget/pull/2"
+    },
+    {
+      "checks": {
+        "check_runs": {
+          "coverage": "complete",
+          "items": [
+            {
+              "conclusion": "success",
+              "name": "tests",
+              "status": "completed"
+            }
+          ]
+        },
+        "head_sha": "cccccccccccccccccccccccccccccccccccccccc",
+        "statuses": {
+          "coverage": "complete",
+          "items": []
+        }
+      },
+      "checks_state": "success_observed",
+      "commit_url": "https://github.com/example/widget/commit/cccccccccccccccccccccccccccccccccccccccc",
+      "draft": false,
+      "head_sha": "cccccccccccccccccccccccccccccccccccccccc",
+      "mergeability": "no_conflict_observed",
+      "number": 3,
+      "reasons": [
+        "current_head_all_observed_checks_successful"
+      ],
+      "repository": "example/widget",
+      "url": "https://github.com/example/widget/pull/3"
+    }
+  ],
+  "repository_coverage": [
+    {
+      "pull_requests": "unavailable",
+      "repository": "example/service"
+    },
+    {
+      "pull_requests": "complete",
+      "repository": "example/widget"
+    }
+  ],
+  "schema": "sigwood.repository-attention-report",
+  "totals": {
+    "checks_state": {
+      "failure_observed": 1,
+      "pending_observed": 0,
+      "success_observed": 1,
+      "unknown": 1
+    },
+    "conflicts": 1,
+    "drafts": 1,
+    "pull_requests": 3,
+    "repositories": 2,
+    "unknown_draft": 0
+  },
+  "version": 1
+}

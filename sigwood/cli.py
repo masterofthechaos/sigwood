@@ -8,6 +8,7 @@ Dispatch table:
   sigwood beacon|dns|syslog|...      run a single detector
   sigwood digest [PATH ...]          orient-before-the-hunt card (sniff-driven)
   sigwood graph [PATH ...]           replay-oriented conn/DNS/Pi-hole graph artifact
+  sigwood repos PATH                experimental offline repository-attention digest
   sigwood export                     pull logs from external systems
   sigwood init                       first-run setup wizard
 
@@ -22,6 +23,7 @@ from __future__ import annotations
 
 import os
 import re
+import stat
 import sys
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
@@ -153,6 +155,7 @@ _EXPORT_ALLOWED: frozenset[str] = frozenset({
 })
 _INIT_ALLOWED: frozenset[str] = frozenset({"help"})
 _ALLOWLIST_ALLOWED: frozenset[str] = frozenset({"help", "config"})
+_REPOS_ALLOWED: frozenset[str] = frozenset({"help", "format"})
 
 
 _VERBS: dict[str, VerbSpec] = {
@@ -174,6 +177,8 @@ _VERBS: dict[str, VerbSpec] = {
                          "[PATH ...]", _DIGEST_ALLOWED),
     "graph":    VerbSpec("graph",    "replay-oriented conn/DNS/Pi-hole HTML graph artifact",
                          "[PATH ...]", _GRAPH_ALLOWED),
+    "repos":    VerbSpec("repos",    "experimental read-only repository-attention snapshot digest",
+                         "PATH", _REPOS_ALLOWED),
     "export":   VerbSpec("export",   "pull logs from external systems to local files",
                          "[BACKEND] [QUERY ...]", _EXPORT_ALLOWED),
     "init":     VerbSpec("init",     "first-run setup wizard",
@@ -276,7 +281,7 @@ def _main(argv: list[str] | None = None) -> int:
     elif cand == "hunt":
         verb = "hunt"               # explicit verb - never requires a target
         rest = args[1:]
-    elif cand in ("digest", "graph", "init", "export", "allowlist"):
+    elif cand in ("digest", "graph", "init", "export", "allowlist", "repos"):
         verb = cand
         rest = args[1:]
     elif cand.startswith("-") or _looks_like_path(cand):
@@ -306,6 +311,8 @@ def _main(argv: list[str] | None = None) -> int:
         return _run_digest(rest) or 0
     elif verb == "graph":
         return _run_graph(rest) or 0
+    elif verb == "repos":
+        return _run_repos(rest)
     elif verb == "init":
         _run_init(rest)
     elif verb == "export":
@@ -379,6 +386,8 @@ def _global_usage_text(no_config: bool = False) -> str:
         "                                   cloudtrail, or blob for unrecognized text)",
         "  sigwood graph [options] [PATH ...] replay-oriented conn/DNS/Pi-hole HTML artifact",
         "",
+        "  sigwood repos PATH [--format text|json]",
+        "                                   experimental offline repository-attention digest",
         "  sigwood export                   pull logs from external systems",
         "  sigwood init                     first-run setup wizard",
         "  sigwood allowlist                inspect & manage suppression lists",
@@ -424,7 +433,12 @@ def _render_verb_help(verb: str) -> str:
             head = f"  {spec.long}"
         if spec.takes_value:
             head += f"={spec.metavar}"
-        lines.append(f"{head:<32} {spec.help}".rstrip())
+        help_text = ("output format (text or json; stdout only)"
+                     if verb == "repos" and spec.key == "format" else spec.help)
+        lines.append(f"{head:<32} {help_text}".rstrip())
+    if verb == "repos":
+        lines += ["", "Reads one UTF-8 NDJSON snapshot file; no network, config, or repository changes.",
+                  "Snapshot only; merge readiness is not assessed."]
     return "\n".join(lines) + "\n"
 
 
@@ -1619,6 +1633,76 @@ def _digest_runner_kwargs(
         use_utc=use_utc,
         schema=schema,
     )
+
+
+def _run_repos(args: list[str]) -> int:
+    """Analyze an explicitly selected local snapshot; never discover or mutate repos."""
+    # The existing parser owns flag identity and allowed-flag validation. This
+    # verb additionally accepts the conventional separated format value used in
+    # its public command form, without changing other verbs' equals-only syntax.
+    normalized: list[str] = []
+    index = 0
+    while index < len(args):
+        arg = args[index]
+        if arg in ("--format", "-f") and index + 1 < len(args):
+            value = args[index + 1]
+            if not value.startswith("-"):
+                normalized.append(f"{arg}={value}")
+                index += 2
+                continue
+        normalized.append(arg)
+        index += 1
+    parsed = _parse_args(normalized, "repos")
+    paths = parsed.get("paths") or []
+    if len(paths) != 1 or paths[0] == "-":
+        raise UsageError("repos requires exactly one local snapshot file PATH (not stdin)")
+    output_format = parsed.get("format", "text")
+    if output_format not in ("text", "json"):
+        raise UsageError("repos supports only --format=text or --format=json")
+
+    # O_NONBLOCK avoids hanging on FIFOs before fstat can reject them. Checking
+    # the opened descriptor, not a prior path stat, closes the stat/open race.
+    # Symlinks to regular files are fine; devices, sockets and directories are not.
+    fd: int | None = None
+    try:
+        fd = os.open(os.path.expanduser(paths[0]), os.O_RDONLY | getattr(os, "O_NONBLOCK", 0))
+        info = os.fstat(fd)
+        if not stat.S_ISREG(info.st_mode):
+            raise ValueError("repos requires a regular local snapshot file")
+        if info.st_size > (64 << 20):
+            raise ValueError("repos: snapshot exceeds 64 MiB input limit")
+        from sigwood.repos import parse_snapshot, summarize, render_text, render_json
+
+        with os.fdopen(fd, "rb") as stream:
+            fd = None  # stream now owns the descriptor, including on exceptions
+            # Bound raw bytes before UTF-8 decoding: text buffering could read
+            # an enormous line (or fail on a later line before its turn). The
+            # pure parser enforces the line/record/live-stream total limits.
+            def read_lines():
+                raw_lines = iter(lambda: stream.readline((1 << 20) + 1), b"")
+                for number, raw in enumerate(raw_lines, 1):
+                    if len(raw) > (1 << 20):
+                        raise ValueError(f"line {number}: input line exceeds 1 MiB limit")
+                    try:
+                        yield raw.decode("utf-8")
+                    except UnicodeError:
+                        raise ValueError(f"line {number}: snapshot must be UTF-8 text") from None
+            report = summarize(parse_snapshot(read_lines()))
+    except FileNotFoundError:
+        raise ValueError("repos: snapshot file not found") from None
+    except UnicodeError:
+        raise ValueError("repos: snapshot must be UTF-8 text") from None
+    except OSError:
+        raise ValueError("repos: cannot read snapshot file") from None
+    finally:
+        if fd is not None:
+            os.close(fd)
+
+    rendered = render_json(report) if output_format == "json" else render_text(report)
+    sys.stdout.write(rendered)
+    if not rendered.endswith("\n"):
+        sys.stdout.write("\n")
+    return 0
 
 
 def _run_init(args: list[str]) -> None:
